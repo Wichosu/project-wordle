@@ -1,10 +1,27 @@
 import React from 'react';
+import { range } from '../../utils';
 
-function Guess({ word }) {
+import { checkGuess } from '../../game-helpers';
+
+function Guess({ word, answer, handleGameStatus }) {
+  const guessStatus = checkGuess(word, answer);
+  let correctStatusCount = 0
+
+  guessStatus?.map((letter) => {
+    if (letter?.status === "correct") {
+      correctStatusCount += 1
+    }
+  })
+
+  console.log("GUESS Status:", guessStatus)
+  if (correctStatusCount === 5) {
+    handleGameStatus("happy")
+  }
+
   return (
     <p className="guess">
-      {word?.split('')?.map((letter) => (
-        <span className='cell'>{letter}</span>
+      {range(5).map((num) => (
+        <span key={num} className={`cell ${guessStatus?.[num]?.status}`}>{word?.[num]}</span>
       ))}
     </p>
   );
